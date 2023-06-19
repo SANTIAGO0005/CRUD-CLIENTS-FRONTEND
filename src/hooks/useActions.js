@@ -15,11 +15,9 @@ export const useActions =()=>{
     }, []);
   
     const fetchClients = async () => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-      axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
-      
+  
       try {
-        const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`);
+        const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`,{ headers : { 'Access-Control-Allow-Origin' : '*'}})
   
         setClients(response.data);
       } catch (error) {

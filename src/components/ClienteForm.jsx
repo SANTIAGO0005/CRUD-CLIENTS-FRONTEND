@@ -54,11 +54,9 @@ function ClienteForm() {
   }, [id]);
 
   const fetchClienteDetails = async () => {
-    axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-    axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
     
     try {
-      const response = await axios.get(`${BASE_URL}/clients/${id}/`);
+      const response = await axios.get(`${BASE_URL}/clients/${id}/`, { headers : { 'Access-Control-Allow-Origin' : '*'}});
       const { name, email, birthday, id_number } = response.data;
       setName(name);
       setEmail(email);
