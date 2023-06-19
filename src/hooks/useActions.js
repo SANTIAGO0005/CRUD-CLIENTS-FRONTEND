@@ -17,7 +17,7 @@ export const useActions =()=>{
     const fetchClients = async () => {
   
       try {
-        const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`,{ headers : { 'Access-Control-Allow-Origin' : '*'}})
+        const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`)
   
         setClients(response.data);
       } catch (error) {

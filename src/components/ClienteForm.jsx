@@ -56,7 +56,7 @@ function ClienteForm() {
   const fetchClienteDetails = async () => {
     
     try {
-      const response = await axios.get(`${BASE_URL}/clients/${id}/`, { headers : { 'Access-Control-Allow-Origin' : '*'}});
+      const response = await axios.get(`${BASE_URL}/clients/${id}/`);
       const { name, email, birthday, id_number } = response.data;
       setName(name);
       setEmail(email);
