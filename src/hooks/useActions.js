@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 export const useActions =()=>{
     
-    const BASE_URL = "http://client-api-five.vercel.app/api";
+    const BASE_URL = "https://client-api-five.vercel.app/api";
     const [clients, setClients] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const history = useHistory();
