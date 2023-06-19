@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const BASE_URL = 'https://client-api-five.vercel.app/api';
 
 function ClienteForm() {
+
   const classes = useStyles();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -53,6 +54,9 @@ function ClienteForm() {
   }, [id]);
 
   const fetchClienteDetails = async () => {
+    axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+    axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
+    
     try {
       const response = await axios.get(`${BASE_URL}/clients/${id}/`);
       const { name, email, birthday, id_number } = response.data;
@@ -75,7 +79,6 @@ function ClienteForm() {
         birthday,
         id_number,
       };
-      debugger;
       if (id!=='nuevo') {
         await axios.put(`${BASE_URL}/clients/update/${id}/`, clienteData)
         .then(resp=>history.push('/') );

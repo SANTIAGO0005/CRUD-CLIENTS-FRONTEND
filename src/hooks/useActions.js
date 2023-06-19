@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 export const useActions =()=>{
-    
     const BASE_URL = "https://client-api-five.vercel.app/api";
     const [clients, setClients] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +15,9 @@ export const useActions =()=>{
     }, []);
   
     const fetchClients = async () => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+      axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
+      
       try {
         const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`);
   
