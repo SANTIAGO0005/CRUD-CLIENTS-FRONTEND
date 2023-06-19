@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = 'http://client-api-five.vercel.app/api';
 
 function ClienteForm() {
   const classes = useStyles();
