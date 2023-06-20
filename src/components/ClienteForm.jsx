@@ -121,7 +121,7 @@ function ClienteForm() {
           className={classes.formField}
           label="Documento"
           value={id_number}
-          onChange={(e) => setBirthday(e.target.value)}
+          onChange={(e) => setId_number(e.target.value)}
           required
         />
         <div className={classes.formActions}>

@@ -52,7 +52,7 @@ const ClienteList = () => {
     handleDelete,
     handleSearch,
     handleSearchSubmit,
-    clients,
+    clients = [],
     searchQuery,
   } = useActions();
 
