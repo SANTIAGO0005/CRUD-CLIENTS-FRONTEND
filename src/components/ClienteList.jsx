@@ -28,56 +28,57 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    padding: theme.spacing(2),
+    height: '100vh', // Ajusta la altura del contenedor al 100% del viewport
+    background: 'linear-gradient(to bottom, #004BA8 50%, #EFEFEF 50%)', // Degradado de azul a negro
   },
   searchContainer: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginBottom: theme.spacing(2),
     width: '750px',
+    backgroundColor: '#FFFFFF',
   },
   searchInput: {
     marginRight: theme.spacing(2),
+    color: '#000000',
+    width: '680px',
   },
   tableContainer: {
-    width: '750px',
+    width: '850px',
     height: '400px',
     overflow: 'auto',
     marginBottom: theme.spacing(2),
   },
+  title: {
+    color: '#FFFFFF',
+    marginBottom: theme.spacing(2),
+  },
+  searchIcon: {
+    color: '#000',
+  },
+  btnNew: {
+    backgroundColor: '#004BA8',
+    color: '#FFFFFF'
+  }
 }));
 
 const ClienteList = () => {
   const classes = useStyles();
-  const BASE_URL = "crud-clients-backend-production.up.railway.app/api";
+  const BASE_URL = "https://crud-clients-backend-production.up.railway.app/api";
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const history = useHistory();
 
   useEffect(() => {
     fetchClients();
+  
   }, []);
 
   const fetchClients = async () => {
-
-    try {
-      const response = await axios.get(`${BASE_URL}/clients`)
-      console.log(response.data)
-      setClients(response.data);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-    }
-
     try {
       const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`)
-      setClients(response.data);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-    }
-
-    try {
-      const response = await axios.get(`${BASE_URL}/clients/`)
-      console.log(response.data)
       setClients(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);
@@ -86,7 +87,7 @@ const ClienteList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.post(`${BASE_URL}/clients/delete/`, { client_id: id });
+      await axios.post(`${BASE_URL}/clients/delete/${id}/`);
       fetchClients();
     } catch (error) {
       console.error('Error deleting client:', error);
@@ -102,17 +103,19 @@ const ClienteList = () => {
     fetchClients();
   };
 
-  const handleAddClient =() => {
-    history.push('/cliente/nuevo');
-
+  const handleAddClient = () => {
+    history.push('/clients/create');
   };
 
   return (
     <Box className={classes.container}>
-      <Typography variant="h4" align="left" gutterBottom>
+      <Typography variant="h4" align="left" gutterBottom className={classes.title}>
         Listado de clientes
       </Typography>
       <Box className={classes.searchContainer}>
+        <IconButton type="submit" color="primary" aria-label="buscar" onClick={handleSearchSubmit}>
+          <SearchIcon className={classes.searchIcon} />
+        </IconButton>
         <TextField
           className={classes.searchInput}
           type="text"
@@ -121,10 +124,10 @@ const ClienteList = () => {
           size="small"
           value={searchQuery}
           onChange={handleSearch}
+          InputProps={{
+            className: classes.searchInput,
+          }}
         />
-        <IconButton type="submit" color="primary" aria-label="buscar" onClick={handleSearchSubmit}>
-          <SearchIcon />
-        </IconButton>
       </Box>
       <Paper elevation={3} className={classes.tableContainer}>
         <TableContainer>
@@ -140,7 +143,6 @@ const ClienteList = () => {
             </TableHead>
             <TableBody>
               {console.log(clients)}
-
               {clients.map((cliente) => (
                 <TableRow key={cliente.id}>
                   <TableCell>{cliente.name}</TableCell>
@@ -152,7 +154,7 @@ const ClienteList = () => {
                       color="primary"
                       aria-label="editar"
                       component={Link}
-                      to={`/cliente/${cliente.id}`}
+                      to={`/clients/${cliente.id}`}
                     >
                       <EditIcon />
                     </IconButton>
@@ -171,9 +173,8 @@ const ClienteList = () => {
         </TableContainer>
       </Paper>
       <Box marginTop={2}>
-        <Button
+        <Button className={classes.btnNew}
           variant="contained"
-          color="primary"
           startIcon={<AddIcon />}
           onClick={handleAddClient}
         >
