@@ -94,7 +94,7 @@ function ClienteForm() {
     <div className={classes.formContainer}>
       <form className={classes.form} onSubmit={handleSubmit}>
         <h2 className={classes.formTitle}>
-          {id ? "Create Client" : "Edit Client"}
+          {id ? "Crear Cliente" : "Editar Cliente"}
         </h2>
         <TextField
           className={classes.formField}
@@ -112,7 +112,7 @@ function ClienteForm() {
         />
         <TextField
           className={classes.formField}
-          label="Birthday"
+          label="Fecha de Nacimiento"
           type="date"
           value={birthday}
           onChange={(e) => setBirthday(e.target.value)}
@@ -134,7 +134,7 @@ function ClienteForm() {
             variant="contained"
             color="primary"
           >
-            {id!== "create" ? "Save" : "Update"}
+            {id!== "create" ? "Guardar" : "Actualizar"}
           </Button>
           <Button variant="contained" color="secondary" component={Link} to="/">
             Cancel
