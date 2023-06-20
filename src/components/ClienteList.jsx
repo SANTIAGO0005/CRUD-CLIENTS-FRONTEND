@@ -21,7 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,6 +61,14 @@ const ClienteList = () => {
   const fetchClients = async () => {
 
     try {
+      const response = await axios.get(`${BASE_URL}/clients`)
+      console.log(response.data)
+      setClients(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+
+    try {
       const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`)
       setClients(response.data);
     } catch (error) {
@@ -69,6 +77,7 @@ const ClienteList = () => {
 
     try {
       const response = await axios.get(`${BASE_URL}/clients/`)
+      console.log(response.data)
       setClients(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);
