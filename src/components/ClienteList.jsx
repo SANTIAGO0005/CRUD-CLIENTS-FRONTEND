@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -73,7 +72,7 @@ const ClienteList = () => {
 
   useEffect(() => {
     fetchClients();
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchClients = async () => {
@@ -87,7 +86,7 @@ const ClienteList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.post(`${BASE_URL}/clients/delete/${id}/`);
+      await axios.delete(`${BASE_URL}/clients/delete/${id}`,{client_id: id});
       fetchClients();
     } catch (error) {
       console.error('Error deleting client:', error);
