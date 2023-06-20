@@ -14,6 +14,7 @@ import {
   TextField,
   makeStyles,
   Paper,
+  Modal,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
@@ -28,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: theme.spacing(2),
-    height: '100vh', // Ajusta la altura del contenedor al 100% del viewport
-    background: 'linear-gradient(to bottom, #004BA8 50%, #EFEFEF 50%)', // Degradado de azul a negro
+    height: '100vh',
+    background: 'linear-gradient(to bottom, #004BA8 50%, #EFEFEF 50%)',
   },
   searchContainer: {
     display: 'flex',
@@ -59,25 +60,46 @@ const useStyles = makeStyles((theme) => ({
   },
   btnNew: {
     backgroundColor: '#004BA8',
-    color: '#FFFFFF'
-  }
+    color: '#FFFFFF',
+  },
+  modal: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: '#FFF',
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  modalTitle: {
+    marginBottom: theme.spacing(2),
+  },
+  modalButtonGroup: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }));
 
 const ClienteList = () => {
   const classes = useStyles();
-  const BASE_URL = "https://crud-clients-backend-production.up.railway.app/api";
+  const BASE_URL = 'https://crud-clients-backend-production.up.railway.app/api';
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
     fetchClients();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchClients = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`)
+      const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`);
       setClients(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);
@@ -86,8 +108,9 @@ const ClienteList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/clients/delete/${id}`,{client_id: id});
+      await axios.delete(`${BASE_URL}/clients/delete/${id}`, { client_id: id });
       fetchClients();
+      setDeleteModalOpen(false);
     } catch (error) {
       console.error('Error deleting client:', error);
     }
@@ -104,6 +127,15 @@ const ClienteList = () => {
 
   const handleAddClient = () => {
     history.push('/clients/create');
+  };
+
+  const openDeleteModal = (client) => {
+    setSelectedClient(client);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -160,7 +192,7 @@ const ClienteList = () => {
                     <IconButton
                       color="secondary"
                       aria-label="eliminar"
-                      onClick={() => handleDelete(cliente.id)}
+                      onClick={() => openDeleteModal(cliente)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -172,7 +204,8 @@ const ClienteList = () => {
         </TableContainer>
       </Paper>
       <Box marginTop={2}>
-        <Button className={classes.btnNew}
+        <Button
+          className={classes.btnNew}
           variant="contained"
           startIcon={<AddIcon />}
           onClick={handleAddClient}
@@ -180,6 +213,21 @@ const ClienteList = () => {
           Nuevo Cliente
         </Button>
       </Box>
+
+      <Modal open={deleteModalOpen} onClose={closeDeleteModal}>
+        <div className={classes.modal}>
+          <h2 className={classes.modalTitle}>¿Está seguro de eliminar este cliente?</h2>
+          <p>{selectedClient?.name}</p>
+          <div className={classes.modalButtonGroup}>
+            <Button color="default" onClick={closeDeleteModal}>
+              Cancelar
+            </Button>
+            <Button color="secondary" onClick={() => handleDelete(selectedClient?.id)}>
+              Eliminar
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Box>
   );
 };
