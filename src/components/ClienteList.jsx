@@ -169,6 +169,7 @@ const ClienteList = () => {
                 <TableCell>Email</TableCell>
                 <TableCell>Documento</TableCell>
                 <TableCell>Fecha de Nacimiento</TableCell>
+                <TableCell>Fecha de Creacion</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
@@ -180,6 +181,7 @@ const ClienteList = () => {
                   <TableCell>{cliente.email}</TableCell>
                   <TableCell>{cliente.id_number}</TableCell>
                   <TableCell>{cliente.birthday}</TableCell>
+                  <TableCell>{cliente.creation_date}</TableCell>
                   <TableCell>
                     <IconButton
                       color="primary"
