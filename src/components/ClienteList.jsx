@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Table,
@@ -19,7 +20,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { useActions } from '../hooks/useActions';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,18 +49,58 @@ const useStyles = makeStyles((theme) => ({
 
 const ClienteList = () => {
   const classes = useStyles();
-  const {
-    handleAddClient,
-    handleDelete,
-    handleSearch,
-    handleSearchSubmit,
-    clients = [],
-    searchQuery,
-  } = useActions();
+  const BASE_URL = "crud-clients-backend-production.up.railway.app/api";
+  const [clients, setClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+
+    try {
+      const response = await axios.get(`${BASE_URL}/clients/filter/?search=${searchQuery}`)
+      setClients(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+
+    try {
+      const response = await axios.get(`${BASE_URL}/clients/`)
+      setClients(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.post(`${BASE_URL}/clients/delete/`, { client_id: id });
+      fetchClients();
+    } catch (error) {
+      console.error('Error deleting client:', error);
+    }
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    fetchClients();
+  };
+
+  const handleAddClient =() => {
+    history.push('/cliente/nuevo');
+
+  };
 
   return (
     <Box className={classes.container}>
-      <Typography variant="h6" align="left" gutterBottom>
+      <Typography variant="h4" align="left" gutterBottom>
         Listado de clientes
       </Typography>
       <Box className={classes.searchContainer}>
@@ -88,6 +130,8 @@ const ClienteList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {console.log(clients)}
+
               {clients.map((cliente) => (
                 <TableRow key={cliente.id}>
                   <TableCell>{cliente.name}</TableCell>
